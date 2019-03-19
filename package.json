@@ -18,7 +18,6 @@
   },
   "scripts": {
     "docs": "./docs.sh",
-    "test": "./test.sh"
   },
   "dependencies": {
     "chalk": "^2.4.1",
