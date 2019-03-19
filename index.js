@@ -93,7 +93,8 @@ function version(program, projectPath) {
 
 	const programOpts = Object.assign({}, prog, {
 		android: path.join(projPath, prog.android),
-		ios: path.join(projPath, prog.ios)
+		ios: path.join(projPath, prog.ios),
+		skipGit: true,
 	});
 
 	const targets = [].concat(programOpts.target, env.target).filter(Boolean);
