@@ -149,13 +149,13 @@ function version(program, projectPath) {
 				})
 			});
 		}
-	} catch (err) {}
+	} catch (err) { }
 
 	var android;
 	var ios;
 
 	if (!targets.length || targets.indexOf("android") > -1) {
-		android = new Promise(function(resolve, reject) {
+		android = new Promise(function (resolve, reject) {
 			log({ text: "Versioning Android..." }, programOpts.quiet);
 
 			var gradleFile;
@@ -193,13 +193,13 @@ function version(program, projectPath) {
 								versionCode: programOpts.setBuild
 									? programOpts.setBuild
 									: versionCode
-									? versionCode + 1
-									: 1
+										? versionCode + 1
+										: 1
 							})
 						})
 					});
 				} else {
-					gradleFile = gradleFile.replace(/versionCode (\d+)/, function(
+					gradleFile = gradleFile.replace(/versionCode (\d+)/, function (
 						match,
 						cg1
 					) {
@@ -224,7 +224,7 @@ function version(program, projectPath) {
 	}
 
 	if (!targets.length || targets.indexOf("ios") > -1) {
-		ios = new Promise(function(resolve, reject) {
+		ios = new Promise(function (resolve, reject) {
 			log({ text: "Versioning iOS..." }, programOpts.quiet);
 
 			if (isExpoApp) {
@@ -237,8 +237,8 @@ function version(program, projectPath) {
 								buildNumber: programOpts.setBuild
 									? programOpts.setBuild.toString()
 									: buildNumber && !programOpts.resetBuild
-									? `${parseInt(buildNumber, 10) + 1}`
-									: "1"
+										? `${parseInt(buildNumber, 10) + 1}`
+										: "1"
 							})
 						})
 					});
@@ -280,21 +280,21 @@ function version(program, projectPath) {
 					reject(
 						stdout.indexOf("directory") > -1
 							? [
-									{
-										style: "red",
-										text: "No project folder found at " + programOpts.ios
-									},
-									{
-										style: "yellow",
-										text: 'Use the "--ios" option to specify the path manually'
-									}
-							  ]
+								{
+									style: "red",
+									text: "No project folder found at " + programOpts.ios
+								},
+								{
+									style: "yellow",
+									text: 'Use the "--ios" option to specify the path manually'
+								}
+							]
 							: [
-									{
-										style: "red",
-										text: stdout
-									}
-							  ]
+								{
+									style: "red",
+									text: stdout
+								}
+							]
 					);
 
 					return;
@@ -388,25 +388,25 @@ function version(program, projectPath) {
 									json,
 									!programOpts.incrementBuild
 										? {
-												CFBundleShortVersionString: appPkg.version
-										  }
+											CFBundleShortVersionString: appPkg.version
+										}
 										: {},
 									!programOpts.neverIncrementBuild
 										? Object.assign(
-												{},
-												{
-													CFBundleVersion: `${
-														programOpts.resetBuild
-															? 1
-															: parseInt(json.CFBundleVersion, 10) + 1
+											{},
+											{
+												CFBundleVersion: `${
+													programOpts.resetBuild
+														? 1
+														: parseInt(json.CFBundleVersion, 10) + 1
 													}`
-												},
-												programOpts.setBuild
-													? {
-															CFBundleVersion: programOpts.setBuild.toString()
-													  }
-													: {}
-										  )
+											},
+											programOpts.setBuild
+												? {
+													CFBundleVersion: programOpts.setBuild.toString()
+												}
+												: {}
+										)
 										: {}
 								)
 							)
@@ -422,21 +422,21 @@ function version(program, projectPath) {
 							<?xml version="1.0" encoding="UTF-8"?>
 							<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 							<plist version="1.0">` +
-								"\n" +
-								beautify(
-									fs
-										.readFileSync(path.join(programOpts.ios, filename), "utf8")
-										.match(/<dict>[\s\S]*<\/dict>/)[0],
-									Object.assign(
-										{ end_with_newline: true },
-										indent.type === "tab"
-											? { indent_with_tabs: true }
-											: { indent_size: indent.amount }
-									)
-								) +
-								stripIndents`
+							"\n" +
+							beautify(
+								fs
+									.readFileSync(path.join(programOpts.ios, filename), "utf8")
+									.match(/<dict>[\s\S]*<\/dict>/)[0],
+								Object.assign(
+									{ end_with_newline: true },
+									indent.type === "tab"
+										? { indent_with_tabs: true }
+										: { indent_size: indent.amount }
+								)
+							) +
+							stripIndents`
 							</plist>` +
-								"\n"
+							"\n"
 						);
 					});
 				});
@@ -450,21 +450,21 @@ function version(program, projectPath) {
 	}
 
 	return pSettle([android, ios].filter(Boolean))
-		.then(function(result) {
+		.then(function (result) {
 			const errs = result
-				.filter(function(item) {
+				.filter(function (item) {
 					return item.isRejected;
 				})
-				.map(function(item) {
+				.map(function (item) {
 					return item.reason;
 				});
 
 			if (errs.length) {
 				errs
-					.reduce(function(a, b) {
+					.reduce(function (a, b) {
 						return a.concat(b);
 					}, [])
-					.forEach(function(err) {
+					.forEach(function (err) {
 						if (program.outputHelp) {
 							log(
 								Object.assign({ style: "red", text: err.toString() }, err),
@@ -478,9 +478,9 @@ function version(program, projectPath) {
 				}
 
 				throw errs
-					.map(function(errGrp, index) {
+					.map(function (errGrp, index) {
 						return errGrp
-							.map(function(err) {
+							.map(function (err) {
 								return err.text;
 							})
 							.join(", ");
@@ -488,74 +488,77 @@ function version(program, projectPath) {
 					.join("; ");
 			}
 
-			const gitCmdOpts = {
-				cwd: projPath
-			};
+			if (!programOpts.skipGit) {
+				const gitCmdOpts = {
+					cwd: projPath
+				};
 
-			if (
-				programOpts.amend ||
-				(process.env.npm_lifecycle_event &&
-					process.env.npm_lifecycle_event.indexOf("version") > -1 &&
-					!programOpts.neverAmend)
-			) {
-				const latestTag =
-					(programOpts.amend ||
-						process.env.npm_config_git_tag_version ||
-						process.env.npm_config_version_git_tag) &&
-					!programOpts.skipTag &&
-					semver.valid(
-						semver.coerce(
-							child
-								.execSync("git log -1 --pretty=%s", gitCmdOpts)
-								.toString()
-								.trim()
-						)
-					) &&
-					child
-						.execSync("git describe --exact-match HEAD", gitCmdOpts)
-						.toString()
-						.trim();
+				if (
+					programOpts.amend ||
+					(process.env.npm_lifecycle_event &&
+						process.env.npm_lifecycle_event.indexOf("version") > -1 &&
+						!programOpts.neverAmend)
+				) {
+					const latestTag =
+						(programOpts.amend ||
+							process.env.npm_config_git_tag_version ||
+							process.env.npm_config_version_git_tag) &&
+						!programOpts.skipTag &&
+						semver.valid(
+							semver.coerce(
+								child
+									.execSync("git log -1 --pretty=%s", gitCmdOpts)
+									.toString()
+									.trim()
+							)
+						) &&
+						child
+							.execSync("git describe --exact-match HEAD", gitCmdOpts)
+							.toString()
+							.trim();
 
-				log({ text: "Amending..." }, programOpts.quiet);
+					log({ text: "Amending..." }, programOpts.quiet);
 
-				switch (process.env.npm_lifecycle_event) {
-					case "version":
-						child.spawnSync(
-							"git",
-							["add"].concat(
-								isExpoApp ? appJSONPath : [programOpts.android, programOpts.ios]
-							),
-							gitCmdOpts
-						);
-
-						break;
-
-					case "postversion":
-					default:
-						child.execSync("git commit -a --amend --no-edit", gitCmdOpts);
-
-						if (latestTag) {
-							log({ text: "Adjusting Git tag..." }, programOpts.quiet);
-
-							child.execSync(
-								`git tag -af ${latestTag} -m ${latestTag}`,
+					switch (process.env.npm_lifecycle_event) {
+						case "version":
+							child.spawnSync(
+								"git",
+								["add"].concat(
+									isExpoApp ? appJSONPath : [programOpts.android, programOpts.ios]
+								),
 								gitCmdOpts
 							);
-						}
+
+							break;
+
+						case "postversion":
+						default:
+							child.execSync("git commit -a --amend --no-edit", gitCmdOpts);
+
+							if (latestTag) {
+								log({ text: "Adjusting Git tag..." }, programOpts.quiet);
+
+								child.execSync(
+									`git tag -af ${latestTag} -m ${latestTag}`,
+									gitCmdOpts
+								);
+							}
+					}
 				}
+
+				log(
+					{
+						style: "green",
+						text: "Done"
+					},
+					programOpts.quiet
+				);
+
+				return child.execSync("git log -1 --pretty=%H", gitCmdOpts).toString();
+
 			}
-
-			log(
-				{
-					style: "green",
-					text: "Done"
-				},
-				programOpts.quiet
-			);
-
-			return child.execSync("git log -1 --pretty=%H", gitCmdOpts).toString();
 		})
-		.catch(function(err) {
+		.catch(function (err) {
 			if (process.env.RNV_ENV === "ava") {
 				console.error(err);
 			}
