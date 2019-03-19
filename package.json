@@ -17,7 +17,7 @@
     "react-native-version": "cli.js"
   },
   "scripts": {
-    "docs": "./docs.sh",
+    "docs": "./docs.sh"
   },
   "dependencies": {
     "chalk": "^2.4.1",
